@@ -1,0 +1,1186 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link href="../static/img/dudul.png" rel="icon" type="image/x-icon" />
+
+    <title>Dudull | Sport Center</title>
+    <link href="../static/src/output.css" rel="stylesheet" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/remixicon@3.4.0/fonts/remixicon.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+      crossorigin="anonymous"
+    />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <link
+      href="https://cdn.jsdelivr.net/npm/keen-slider@6.8.6/keen-slider.min.css"
+      rel="stylesheet"
+    />
+    <script type="module">
+      import KeenSlider from "https://cdn.jsdelivr.net/npm/keen-slider@6.8.6/+esm";
+
+      const keenSlider = new KeenSlider(
+        "#keen-slider",
+        {
+          loop: true,
+          slides: {
+            origin: "center",
+            perView: 1.25,
+            spacing: 16,
+          },
+          breakpoints: {
+            "(min-width: 1024px)": {
+              slides: {
+                origin: "auto",
+                perView: 2.5,
+                spacing: 32,
+              },
+            },
+          },
+        },
+        []
+      );
+
+      const keenSliderPrevious = document.getElementById(
+        "keen-slider-previous"
+      );
+      const keenSliderNext = document.getElementById("keen-slider-next");
+
+      keenSliderPrevious.addEventListener("click", () => keenSlider.prev());
+      keenSliderNext.addEventListener("click", () => keenSlider.next());
+
+      // Fungsi untuk memeriksa waktu login
+      function checkLoginTime() {
+        var loginTime = new Date("{{ session.get('login_time') }}"); // Ambil waktu login dari template Flask
+        var currentTime = new Date();
+        var timeoutSeconds = { timeout_seconds }; // Tambahkan variabel untuk waktu timeout dari Flask
+
+        // Hitung selisih waktu antara waktu login dan waktu sekarang dalam detik
+        var timeDifference = (currentTime - loginTime) / 1000;
+
+        // Jika waktu habis, arahkan pengguna ke halaman indeks
+        if (timeDifference > timeoutSeconds) {
+          window.location.href = "/";
+        }
+      }
+
+      // Panggil fungsi saat halaman dimuat
+      window.onload = function () {
+        checkLoginTime();
+      };
+
+      document.addEventListener("DOMContentLoaded", function () {
+        var alertMessage = "{{ alert_message|safe }}";
+        if (alertMessage) {
+          Swal.fire({
+            icon: "success",
+            title: "Berhasil!",
+            text: alertMessage,
+          });
+        }
+      });
+    </script>
+  </head>
+  <body>
+    {% with messages = get_flashed_messages(with_categories=True) %} {% if
+    messages %} {% for category, message in messages %}
+    <div class="alert alert-{{ category }}" role="alert">
+      {{ message }}
+      <button
+        type="button"
+        class="tombol-close"
+        data-bs-dismiss="alert"
+        aria-label="Close"
+      >
+        &#10006;
+      </button>
+    </div>
+    {% endfor %} {% endif %} {% endwith %}
+    <!-- header start -->
+    <nav class="navbar navbar-expand-lg fixed-top">
+      <div class="container-fluid">
+        <div class="navbar-brand me-auto">
+          <img
+            src="{{ url_for('static', filename='img/dudul.png') }}"
+            alt="Logo"
+          />
+        </div>
+        <div
+          class="offcanvas offcanvas-end"
+          tabindex="-1"
+          id="offcanvasNavbar"
+          aria-labelledby="offcanvasNavbarLabel"
+        >
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="offcanvasNavbarLabel">
+              <img
+                src="{{ url_for('static', filename='img/dudul.png') }}"
+                alt="Logo"
+              />
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="offcanvas"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="offcanvas-body">
+            <ul class="navbar-nav justify-content-center flex-grow-1 pe-3">
+              <li class="nav-item">
+                <a class="nav-link mx-lg-2 active" aria-current="page" href="#"
+                  >Home</a
+                >
+              </li>
+              <li class="nav-item">
+                <a class="nav-link mx-lg-2" href="#tentang">About Us</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link mx-lg-2" href="#booking">Book</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link mx-lg-2" href="#fasilitas">Facility</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link mx-lg-2" href="#galeri">Gallery</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link mx-lg-2" href="#kategori">Category</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link mx-lg-2" href="#kontak">Contact</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link mx-lg-2" href="#testimoni">Testimony</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+        {% if session.email %}
+        <a href="{{ url_for('userLogout') }}" class="logout-button">Log out</a>
+        {% else %}
+        <a href="{{ url_for('register') }}" class="login-button">Register</a>
+        {% endif %}
+
+        <button
+          class="navbar-toggler pe-0"
+          type="button"
+          data-bs-toggle="offcanvas"
+          data-bs-target="#offcanvasNavbar"
+          aria-controls="offcanvasNavbar"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+      </div>
+    </nav>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap");
+
+      :root {
+        --primary-color: #2c3855;
+        --primary-color-dark: #435681;
+        --text-dark: #333333;
+        --text-light: #767268;
+        --extra-light: #f3f4f6;
+        --white: #ffffff;
+        --max-width: 1200px;
+      }
+
+      .alert {
+        position: fixed;
+        top: 0; /* Jarak dari atas */
+        left: 0; /* Jarak dari kanan */
+        background-color: #d4edda; /* Warna latar belakang (merah muda) */
+        color: #155724; /* Warna teks (gelap) */
+        border: 1px solid #c3e6cb; /* Border */
+        border-radius: 5px; /* Sudut melengkung */
+        padding: 15px; /* Padding di dalam alert */
+        width: 300px; /* Lebar alert */
+        z-index: 1050; /* Pastikan di atas konten lain */
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Bayangan */
+        display: flex; /* Gunakan flexbox untuk tata letak */
+        justify-content: space-between; /* Ruang antara konten dan tombol tutup */
+        align-items: center; /* Vertikal center */
+      }
+
+      .tombol-close {
+        background: none; /* Tanpa background */
+        border: none; /* Tanpa border */
+        font-size: 15px; /* Ukuran font */
+        cursor: pointer; /* Tangan ketika hover */
+        color: #505050; /* Warna teks (gelap) */
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      .navbar {
+        background-color: #fff;
+        height: 80px;
+        margin: 20px;
+        border-radius: 16px;
+        padding: 0.5rem;
+        width: auto;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+      }
+
+      .navbar-brand {
+        width: 3rem;
+        /* background-color: red; */
+      }
+
+      .login-button {
+        background-color: rgb(44, 82, 85);
+        color: #fff;
+        padding: 8px 20px;
+        border-radius: 50px;
+        text-decoration: none;
+      }
+
+      .login-button:hover {
+        background-color: rgba(44, 82, 85, 0.9);
+      }
+
+      .login-button:active {
+        scale: 0.95;
+      }
+
+      .logout-button {
+        background-color: rgb(194, 74, 74);
+        color: #fff;
+        padding: 8px 20px;
+        border-radius: 50px;
+        text-decoration: none;
+      }
+
+      .logout-button:hover {
+        background-color: rgba(194, 74, 74, 0.9);
+      }
+
+      .logout-button:active {
+        scale: 0.95;
+      }
+
+      .navbar-toggler {
+        border: none;
+        font-size: 1.25rem;
+      }
+
+      .navbar-toggler:focus,
+      .btn-close:focus {
+        box-shadow: none;
+        outline: none;
+      }
+
+      .nav-link {
+        color: #666777;
+        position: relative;
+        font-weight: 500;
+      }
+
+      .nav-link:hover,
+      .nav-link.active {
+        color: rgb(44, 82, 85);
+      }
+
+      .offcanvas-title {
+        width: 5rem;
+      }
+
+      @media (min-width: 991px) {
+        .nav-link::before {
+          content: "";
+          position: absolute;
+          bottom: 0;
+          left: 50%;
+          transform: translateX(-50%);
+          width: 0;
+          height: 2px;
+          background-color: rgb(44, 82, 85);
+          visibility: hidden;
+          transition: 0.2s ease-in-out;
+        }
+
+        .nav-link:hover::before,
+        .nav-link.active::before {
+          width: 80%;
+          visibility: visible;
+        }
+      }
+
+      .section__container {
+        max-width: var(--max-width);
+        margin: auto;
+        padding: 5rem 1rem;
+      }
+
+      .section__header {
+        padding-top: 8rem;
+        font-size: 2rem;
+        font-weight: 600;
+        color: var(--text-dark);
+        text-align: center;
+      }
+
+      a {
+        text-decoration: none;
+      }
+
+      img {
+        width: 100%;
+        display: flex;
+      }
+
+      body {
+        font-family: "Poppins", sans-serif;
+      }
+
+      .link a {
+        font-weight: 500;
+        color: var(--text-light);
+        transition: 0.3s;
+      }
+
+      .link a:hover {
+        color: var(--primary-color);
+      }
+
+      .header__container {
+        padding: 8rem 1rem 5rem 1rem;
+      }
+
+      .header__image__container {
+        position: relative;
+        min-height: 500px;
+        background-image: linear-gradient(
+            to right,
+            rgba(44, 82, 85, 0.9),
+            rgba(100, 125, 187, 0.2)
+          ),
+          url("../static/img/field.jpg");
+        background-position: center center;
+        background-size: cover;
+        display: flex;
+        background-repeat: no-repeat;
+        border-radius: 2rem;
+      }
+
+      .header__content {
+        max-width: 600px;
+        display: grid;
+        align-items: center;
+        padding: 5rem 2rem;
+      }
+
+      .header__content h1 {
+        margin-bottom: 10rem;
+        font-size: 3rem;
+        line-height: 4rem;
+        font-weight: 600;
+        color: var(--white);
+        text-shadow: 2px 2px rgb(38, 61, 63);
+      }
+
+      .header__content p {
+        color: var(--extra-light);
+        font-weight: 500;
+        font-style: italic;
+        text-shadow: 1px 1px rgb(38, 61, 63);
+      }
+
+      .popular__grid {
+        margin-top: 4rem;
+        display: grid;
+        /* background-color: red; */
+        grid-template-columns: repeat(3, 1fr);
+        gap: 2rem;
+      }
+
+      .popular__category {
+        margin-top: 4rem;
+        display: grid;
+        padding: 0.5rem;
+        /* background-color: red; */
+        grid-template-columns: repeat(2, 1fr);
+        gap: 2rem;
+      }
+
+      .popular__card {
+        overflow: hidden;
+        border-radius: 1rem;
+        box-shadow: 5px 5px 20px rgba(0, 0, 0, 0.2);
+      }
+
+      .popular__image_container1 {
+        position: relative;
+        min-height: 400px;
+        background-image: linear-gradient(
+            to right,
+            rgb(0, 0, 0, 0.7),
+            rgb(0, 0, 0, 0.7)
+          ),
+          url("../static/img/kategorifutsal.jpg");
+        background-position: center center;
+        background-size: cover;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-repeat: no-repeat;
+        border-radius: 1rem;
+      }
+
+      .popular__image_container2 {
+        position: relative;
+        min-height: 400px;
+        background-image: linear-gradient(
+            to right,
+            rgb(0, 0, 0, 0.6),
+            rgb(0, 0, 0, 0.6)
+          ),
+          url("../static/img/badmintonkategori.jpg");
+        background-position: center center;
+        background-size: cover;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-repeat: no-repeat;
+        border-radius: 1rem;
+      }
+
+      .popular__image_container_book1 {
+        position: relative;
+        min-height: 400px;
+        background-image: linear-gradient(
+            to right,
+            rgb(0, 0, 0, 0.7),
+            rgb(0, 0, 0, 0.7)
+          ),
+          url("../static/img/bolafutsal.jpg");
+        background-position: center center;
+        background-size: cover;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-repeat: no-repeat;
+        border-radius: 1rem;
+      }
+
+      .popular__image_container_book2 {
+        position: relative;
+        min-height: 400px;
+        background-image: linear-gradient(
+            to right,
+            rgb(0, 0, 0, 0.7),
+            rgb(0, 0, 0, 0.7)
+          ),
+          url("../static/img/raket.jpg");
+        background-position: center center;
+        background-size: cover;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-repeat: no-repeat;
+        border-radius: 1rem;
+      }
+
+      .popular__content {
+        padding: 1rem;
+      }
+
+      .booking__content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .booking__content h2 {
+        font-size: 3rem;
+        font-weight: 500;
+        line-height: 4rem;
+        color: var(--white);
+        text-shadow: 2px 2px rgb(38, 61, 63);
+      }
+
+      .popular__content h2 {
+        font-size: 3rem;
+        line-height: 4rem;
+        font-weight: 500;
+        color: var(--white);
+        text-shadow: 2px 2px rgb(38, 61, 63);
+      }
+
+      .popular__card__header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        margin-bottom: 0.5rem;
+      }
+
+      .popular__card__header h4 {
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: var(--text-dark);
+      }
+
+      .popular__card__header h5 {
+        font-size: 1.2rem;
+        font-weight: 500;
+        color: var(--text-light);
+      }
+
+      .popular__content p {
+        color: var(--text-light);
+      }
+
+      /* .client {
+  background-color: var(--extra-light);
+} */
+
+      .client {
+        margin-bottom: 7rem;
+      }
+
+      .client__grid {
+        margin-top: 4rem;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 2rem;
+      }
+
+      .client__card {
+        padding: 2rem;
+        background-color: var(--white);
+        border-radius: 1rem;
+        box-shadow: 5px 5px 20px rgba(0, 0, 0, 0.1);
+      }
+
+      .client__card img {
+        max-width: 80px;
+        margin: auto;
+        margin-bottom: 1rem;
+        border-radius: 100%;
+      }
+
+      .client__card p {
+        text-align: center;
+        color: var(--text-dark);
+      }
+
+      .reward__container {
+        padding: 2rem;
+        text-align: center;
+        border-radius: 2rem;
+        box-shadow: 5px 5px 30px rgba(0, 0, 0, 0.1);
+        margin-top: 4rem;
+      }
+
+      .reward__container p {
+        margin-bottom: 1rem;
+        font-weight: 600;
+        color: var(--text-light);
+        line-height: 2;
+      }
+
+      .reward__container h4 {
+        max-width: 500px;
+        margin: auto;
+        margin-bottom: 2rem;
+        font-size: 2rem;
+        font-weight: 600;
+        color: var(--text-dark);
+      }
+
+      .reward__btn {
+        padding: 0.8rem 3rem;
+        outline: none;
+        border: none;
+        font-size: 1rem;
+        color: var(--white);
+        background-color: rgb(44, 82, 85);
+        border-radius: 50px;
+        cursor: pointer;
+        transition: 0.2s;
+      }
+
+      .reward__btn:hover {
+        background-color: rgb(52, 96, 99);
+      }
+
+      .footer {
+        background-color: var(--extra-light);
+      }
+
+      .footer__container {
+        display: grid;
+        grid-template-columns: 2fr repeat(3, 1fr);
+        gap: 5rem;
+      }
+
+      .footer__col h3 {
+        margin-bottom: 1rem;
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: var(--text-dark);
+        /* padding-top: 3rem; */
+      }
+
+      .footer__col h4 {
+        margin-bottom: 1rem;
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: var(--text-dark);
+        /* padding-top: 3rem; */
+      }
+
+      .footer__col p {
+        margin-bottom: 1rem;
+        color: var(--text-light);
+        /* cursor: pointer; */
+        transition: 0.3s;
+      }
+
+      /* .footer__col p:hover {
+  color: var(--text-dark);
+} */
+
+      .footer__bar {
+        position: relative;
+        max-width: var(--max-width);
+        margin: auto;
+        padding: 1rem;
+        font-size: 0.9rem;
+        font-weight: 500;
+        color: var(--text-light);
+        text-align: right;
+        overflow: hidden;
+      }
+
+      .footer__bar::before {
+        position: absolute;
+        content: "";
+        top: 50%;
+        right: 28rem;
+        transform: translateY(-50%);
+        width: 20rem;
+        height: 2px;
+        background-color: var(--text-light);
+      }
+
+      .lebar {
+        width: 75%;
+      }
+
+      @media (width < 900px) {
+        .popular__grid {
+          grid-template-columns: repeat(2, 1fr);
+          gap: 2rem;
+        }
+
+        .popular__category {
+          grid-template-columns: repeat(2, 1fr);
+          gap: 2rem;
+        }
+
+        .client__grid {
+          grid-template-columns: repeat(2, 1fr);
+          gap: 1rem;
+        }
+
+        .footer__container {
+          grid-template-columns: repeat(2, 1fr);
+        }
+
+        .footer__col h3 {
+          padding-top: 4rem;
+        }
+
+        .footer__col h4 {
+          padding-top: 4rem;
+        }
+
+        .lebar {
+          width: 100%;
+        }
+      }
+
+      @media (width < 600px) {
+        .header__container {
+          padding-bottom: 10rem;
+        }
+
+        .popular__grid {
+          grid-template-columns: repeat(1, 1fr);
+        }
+
+        .popular__category {
+          grid-template-columns: repeat(1, 1fr);
+        }
+
+        .client__grid {
+          grid-template-columns: repeat(1, 1fr);
+        }
+
+        .footer__container {
+          gap: 2rem;
+        }
+
+        .footer__col h3 {
+          padding-top: 3rem;
+        }
+
+        .footer__col h4 {
+          padding-top: 3rem;
+        }
+      }
+    </style>
+    <!-- header end -->
+
+    <!-- hero section start -->
+    <header class="section__container header__container">
+      <div class="header__image__container">
+        <div class="header__content">
+          <h1>Dudull Sports Center</h1>
+          <p>Reserve Badminton and Futsal courts at affordable prices.</p>
+        </div>
+      </div>
+    </header>
+    <!-- hero section end -->
+    <!-- About Us Start -->
+    <section class="section__container" id="tentang">
+      <div class="reward__container">
+        <h4>About Us</h4>
+        <p>{{ dataTentang.deskripsi_admin }}</p>
+        <!-- <button class="reward__btn">Join Rewards</button> -->
+      </div>
+    </section>
+    <!-- About Us End -->
+
+    <!-- Booking Start -->
+    <section class="section__container popular__container" id="booking">
+      <h1
+        class="text-center text-4xl sm:text-3xl lg:text-4xl font-bold mb-12 text-black mt-12 tracking-wide drop-shadow-lg"
+      >
+        Dudull <span class="text-teal-600">Booking</span>
+      </h1>
+      <div class="popular__category">
+        <div class="popular__image_container_book1">
+          <div class="booking__content">
+            <h2>Futsal</h2>
+            <a href="{{ url_for('selectField') }}"
+              ><button class="reward__btn">Book</button></a
+            >
+          </div>
+        </div>
+        <div class="popular__image_container_book2">
+          <div class="booking__content">
+            <h2>Badminton</h2>
+            <a href="{{ url_for('selectField') }}">
+              <button class="reward__btn">Book</button></a
+            >
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- Booking End -->
+
+    <!-- information section start -->
+    <section class="section__container popular__container" id="fasilitas">
+      <h1
+        class="text-center text-4xl sm:text-3xl lg:text-4xl font-bold mb-12 text-black mt-12 tracking-wide drop-shadow-lg"
+      >
+        Dudull <span class="text-teal-600">Facilities</span>
+      </h1>
+      <div class="popular__grid">
+        <div class="popular__card">
+          <img
+            src="{{ url_for('static', filename='img/musholla.jpg') }}"
+            alt="popular hotel"
+          />
+          <div class="popular__content">
+            <div class="popular__card__header">
+              <h4>Musholla</h4>
+            </div>
+            <p>Convenient with spacious prayer room</p>
+          </div>
+        </div>
+        <div class="popular__card">
+          <img
+            src="{{ url_for('static', filename='img/restroom.jpg') }}"
+            alt="popular hotel"
+          />
+          <div class="popular__content">
+            <div class="popular__card__header">
+              <h4>Restroom</h4>
+            </div>
+            <p>Fully facilitated and premium</p>
+          </div>
+        </div>
+        <div class="popular__card">
+          <img
+            src="{{ url_for('static', filename='img/canteen.jpg') }}"
+            alt="popular hotel"
+          />
+          <div class="popular__content">
+            <div class="popular__card__header">
+              <h4>Canteen</h4>
+            </div>
+            <p>A spacious canteen with a variety of food</p>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- information section end -->
+
+    <!-- Galeri section start -->
+    <section id="galeri" class="bg-cover bg-center min-h-screen py-20">
+      <h1
+        class="text-center text-4xl sm:text-3xl lg:text-4xl font-bold mb-12 text-black mt-12 tracking-wide drop-shadow-lg"
+      >
+        Dudull <span class="text-teal-600">Gallery</span>
+      </h1>
+      <div class="container mx-auto">
+        <div class="flex justify-center mb-4">
+          <img
+            id="featured-img"
+            class="lebar h-96 object-cover shadow-2xl"
+            src="../static/img/dudulsportcenter.jpg"
+            alt="Featured Image"
+            style="border-radius: 15px"
+          />
+        </div>
+        <div class="grid grid-cols-5 gap-4 py-8">
+          {% for data in dataGaleri %}
+          <img
+            class="gallery-thumbnail w-full h-32 object-cover cursor-pointer shadow-lg"
+            src="../static/img/{{ data.foto }}"
+            alt="{{ data.judul }}"
+            style="border-radius: 15px"
+          />
+          {% endfor %}
+        </div>
+      </div>
+    </section>
+    <!-- Galeri section end -->
+
+    <!-- category section start -->
+    <section class="section__container popular__container" id="kategori">
+      <h1
+        class="text-center text-4xl sm:text-3xl lg:text-4xl font-bold mb-12 text-black mt-12 tracking-wide drop-shadow-lg"
+      >
+        Dudull <span class="text-teal-600">Category</span>
+      </h1>
+      <div class="popular__category">
+        <div class="popular__image_container1">
+          <div class="popular__content">
+            <h2>Futsal</h2>
+          </div>
+        </div>
+        <div class="popular__image_container2">
+          <div class="popular__content">
+            <h2>Badminton</h2>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- category section end -->
+
+    <!-- contact section start -->
+    <section
+      id="kontak"
+      class="bg-cover bg-center min-h-screen"
+      style="background-color: #f8f8f8"
+    >
+      <div class="container px-6 py-32 mx-auto">
+        <div>
+          <p class="dark:text-gray-900 font-bold text-teal-600 text-xl">
+            Contact Us
+          </p>
+
+          <h1
+            class="mt-2 text-3xl font-bold text-gray-800 md:text-3xl dark:text-white"
+          >
+            Dudull <span class="text-teal-600">Sport Center</span>
+          </h1>
+
+          <p class="mt-3 text-gray-500 dark:text-gray-400">
+            We're a pretty lovely bunch who are ready to hear your stories!
+            Let's talk to us directly! 🚀.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 gap-12 mt-10 lg:grid-cols-3">
+          <div class="grid grid-cols-1 gap-12 sm:grid-cols-2 lg:grid-cols-1">
+            <div>
+              <span
+                class="dark:bg-blue-100/80 inline-block p-3 text-blue-500 rounded-full bg-blue-100/80"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  class="w-5 h-5"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"
+                  />
+                </svg>
+              </span>
+
+              <h2
+                class="mt-4 text-base font-medium text-gray-800 dark:text-white"
+              >
+                Email
+              </h2>
+              <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">
+                Our lovely staff is ready to help. How can we help you today?
+              </p>
+              <p class="mt-2 text-sm text-blue-500 dark:text-blue-400">
+                {{ dataKontak.email_admin }}
+              </p>
+            </div>
+
+            <div>
+              <span
+                class="dark:bg-blue-100/80 inline-block p-3 text-blue-500 rounded-full bg-blue-100/80 dark:bg-gray-800"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  class="w-5 h-5"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"
+                  />
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"
+                  />
+                </svg>
+              </span>
+
+              <h2
+                class="mt-4 text-base font-medium text-gray-800 dark:text-white"
+              >
+                Location
+              </h2>
+              <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">
+                Feel free to visit our guard post, let's go!
+              </p>
+              <p class="mt-2 text-sm text-blue-500 dark:text-blue-400">
+                {{ dataKontak.alamat_admin }}
+              </p>
+            </div>
+
+            <div>
+              <span
+                class="dark:bg-blue-100/80 inline-block p-3 text-blue-500 rounded-full bg-blue-100/80 dark:bg-gray-800"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  class="w-5 h-5"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z"
+                  />
+                </svg>
+              </span>
+
+              <h2
+                class="mt-4 text-base font-medium text-gray-800 dark:text-white"
+              >
+                Phone
+              </h2>
+              <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">
+                Every day, from 1 PM to 1 AM.
+              </p>
+              <p class="mt-2 text-sm text-blue-500 dark:text-blue-400">
+                {{ dataKontak.noTelepon_admin }}
+              </p>
+            </div>
+          </div>
+
+          <div class="overflow-hidden rounded-lg lg:col-span-2 h-96 lg:h-auto">
+            <iframe
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3965.9551354303135!2d106.99355107418333!3d-6.269630861375051!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e698d002c429901%3A0x90e06735b8c6e397!2sFITNESS%20FACTORY%20RAWALUMBU!5e0!3m2!1sid!2sid!4v1733873899294!5m2!1sid!2sid"
+              width="800"
+              height="600"
+              style="border: 0"
+              allowfullscreen=""
+              loading="lazy"
+              referrerpolicy="no-referrer-when-downgrade"
+            ></iframe>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- contact section end -->
+
+    <!-- testimoni section start -->
+    <section
+      id="testimoni"
+      class="bg-cover bg-center min-h-screen"
+      style="background-color: #f8f8f8"
+    >
+      <div
+        class="container mx-auto max-w-[1340px] px-4 sm:px-6 lg:me-0 lg:py-16 lg:pe-0 lg:ps-8 xl:py-32"
+      >
+        <div
+          class="max-w-7xl items-end justify-between sm:flex sm:pe-6 lg:pe-8"
+        >
+          <h2
+            class="max-w-xl text-3xl lg:text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl"
+          >
+            Check out the great feedback
+            <span class="text-teal-600">from our loyal customers!</span>
+          </h2>
+
+          <div class="mt-8 flex gap-4 lg:mt-0">
+            <button
+              aria-label="Previous slide"
+              id="keen-slider-previous"
+              class="rounded-full border border-gray-500 p-3 text-gray-900 transition hover:bg-teal-600 hover:text-white"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="size-5 rtl:rotate-180"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M15.75 19.5L8.25 12l7.5-7.5"
+                />
+              </svg>
+            </button>
+
+            <button
+              aria-label="Next slide"
+              id="keen-slider-next"
+              class="rounded-full border border-gray-500 p-3 text-gray-900 transition hover:bg-teal-600 hover:text-white"
+            >
+              <svg
+                class="size-5 rtl:rotate-180"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M9 5l7 7-7 7"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="-mx-6 mt-8 lg:col-span-2 lg:mx-0">
+          <div id="keen-slider" class="keen-slider">
+            {% for data in dataReview %}
+            <div class="keen-slider__slide">
+              <blockquote
+                class="flex h-full flex-col justify-between bg-white p-6 shadow-sm sm:p-8 lg:p-12"
+              >
+                <div>
+                  <div class="flex justify-start">
+                    <img
+                      src="../static/img/{{data.foto}}"
+                      alt="user review"
+                      class="w-32 h-32 object-cover rounded-full"
+                    />
+                    <!-- Adjust the width and height as needed -->
+                  </div>
+
+                  <div class="mt-4">
+                    <p class="text-2xl font-bold text-teal-600 sm:text-3xl">
+                      {{ data.nama }}
+                    </p>
+
+                    <p class="mt-4 text-justify leading-relaxed text-gray-700">
+                      {{ data.ulasan }}
+                    </p>
+                  </div>
+                </div>
+
+                <footer class="mt-4 text-sm font-medium text-gray-700 sm:mt-6">
+                  &mdash; {{ data.tanggal }}
+                </footer>
+              </blockquote>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- testimoni section end -->
+
+    <!-- footer start -->
+    {% include "footer.html" %}
+    <!-- footer end -->
+
+    <script>
+      $(document).ready(function () {
+        $(".gallery-thumbnail").on("click", function () {
+          const src = $(this).attr("src");
+          $("#featured-img").fadeOut(500, function () {
+            $(this).attr("src", src).fadeIn(500);
+          });
+        });
+      });
+    </script>
+    <script>
+      const navLinks = document.querySelectorAll(".nav-link");
+
+      navLinks.forEach((link) => {
+        link.addEventListener("click", function () {
+          navLinks.forEach((nav) => nav.classList.remove("active"));
+
+          this.classList.add("active");
+        });
+      });
+    </script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>

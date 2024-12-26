@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='admin.css') }}"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/boxicons@2.0.5/css/boxicons.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="icon"
+      href="{{ url_for('static', filename='assets/dudul.ico') }}"
+    />
+    <title>Dashboard | Admin</title>
+  </head>
+  <body>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+      crossorigin="anonymous"
+    ></script>
+    <div class="l-form">
+      <div class="shape1"></div>
+      <div class="shape2"></div>
+
+      <div class="form">
+        <img
+          src="{{ url_for('static', filename='img/adminn.jpg') }}"
+          alt=""
+          class="form__img"
+        />
+
+        <form method="POST" class="form__content">
+          <h1 class="form__title">Dudull's Admin</h1>
+
+          <div class="form__div form__div-one">
+            <div class="form__icon">
+              <i class="bx bx-user-circle"></i>
+            </div>
+
+            <div class="form__div-input">
+              <input
+                type="text"
+                name="username"
+                placeholder="Username"
+                class="form__input"
+              />
+            </div>
+          </div>
+
+          <div class="form__div">
+            <div class="form__icon">
+              <i class="bx bx-lock"></i>
+            </div>
+
+            <div class="form__div-input">
+              <input
+                type="password"
+                name="password"
+                placeholder="Password"
+                class="form__input"
+              />
+            </div>
+          </div>
+
+          <input
+            type="submit"
+            name="login"
+            class="form__button"
+            value="Login"
+          />
+        </form>
+      </div>
+    </div>
+
+    <!-- ===== MAIN JS ===== -->
+    <script>
+      /*===== FOCUS =====*/
+      const inputs = document.querySelectorAll(".form__input");
+
+      /*=== Add focus ===*/
+      function addfocus() {
+        let parent = this.parentNode.parentNode;
+        parent.classList.add("focus");
+      }
+
+      /*=== Remove focus ===*/
+      function remfocus() {
+        let parent = this.parentNode.parentNode;
+        if (this.value == "") {
+          parent.classList.remove("focus");
+        }
+      }
+
+      /*=== To call function===*/
+      inputs.forEach((input) => {
+        input.addEventListener("focus", addfocus);
+        input.addEventListener("blur", remfocus);
+      });
+    </script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>
