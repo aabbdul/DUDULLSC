@@ -209,7 +209,7 @@ def selectTime(_id):
         })
         
         if existing_booking is not None:
-            alert_message = 'Waktu dan tanggal yang dipilih sudah dipesan. Silakan pilih waktu yang lain.'
+            alert_message = 'The chosen time and date are already booked. Please select another time.'
             return render_template('selectTime.html', fullname=fullname, phone_number=phone_number, email=email, dataLapangan=dataLapangan, alert_message=alert_message)
 
         # Simpan data pemesanan ke sesi
@@ -226,7 +226,7 @@ def selectTime(_id):
         }
         
         # Simpan pesan alert ke sesi
-        session['alert_message'] = 'Berhasil dipesan. Silahkan pilih metode pembayaran.'
+        session['alert_message'] = 'Successfully booked. Please choose a payment method.'
         
         # Alihkan ke halaman pembayaran
         return redirect(url_for('payment'))
@@ -239,10 +239,10 @@ def payment():
     dataPembayaran = list(db.dataPembayaran.find({}))
     fullname = session.get('fullname')
     booking_data = session.get('booking_data')
-    alert_message = session.pop('alert_message', 'Silahkan pilih metode pembayaran.')
+    alert_message = session.pop('alert_message', 'Please choose a payment method.')
     
     if not booking_data:
-        alert_message = 'Tidak ada data pemesanan yang ditemukan. Silakan lakukan pemesanan terlebih dahulu.'
+        alert_message = 'No booking data found. Please place an order first.'
         return redirect(url_for('selectTime'))
     
     if request.method == 'POST':
@@ -251,7 +251,7 @@ def payment():
         payment_proof = request.files.get('payment_proof')
         
         if not payment_type or not payment_method:
-            session['alert_message'] = 'Pilih metode pembayaran terlebih dahulu.'
+            session['alert_message'] = 'Select a payment method first.'
             return redirect(url_for('payment'))
         
         if payment_proof:
@@ -281,7 +281,7 @@ def payment():
         result = db.payments.insert_one(payment_data)
         payment_id = result.inserted_id
         
-        session['alert_message'] = 'Pembayaran Berhasil! Terimakasih sudah ingin bermain di Gor Sinta.'
+        session['alert_message'] = 'Payment Successful!.'
         return redirect(url_for('invoice', payment_id=str(payment_id)))
     
     return render_template('payment.html', fullname=fullname, booking_data=booking_data, alert_message=alert_message, dataPembayaran=dataPembayaran)
