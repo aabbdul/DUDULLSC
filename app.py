@@ -123,7 +123,9 @@ def auth():
                 'fullname': fullname,
                 'phone_number': phone_number,
                 'email': email,
-                'password': hash_password
+                'password': hash_password,
+                'alamat':"",
+                'foto':""
             }
 
             user_id = users_collection.insert_one(new_user).inserted_id
@@ -347,7 +349,7 @@ def datadiri():
         return redirect(url_for('datadiri'))
 
     user = users_collection.find_one({'_id': ObjectId(session['user_id'])})
-    currentPhoto = user.get('foto') if user else ''
+    currentPhoto = user.get('foto') if user else ""
     return render_template('dataDiri.html', fullname=user.get('fullname'), users=user, currentPhoto=currentPhoto)
 
 
