@@ -124,8 +124,6 @@ def auth():
                 'phone_number': phone_number,
                 'email': email,
                 'password': hash_password,
-                'alamat':"",
-                'foto':""
             }
 
             user_id = users_collection.insert_one(new_user).inserted_id
@@ -345,7 +343,6 @@ def datadiri():
             {'$set': update_data}
         )
 
-        flash('Profil berhasil diperbarui')
         return redirect(url_for('datadiri'))
 
     user = users_collection.find_one({'_id': ObjectId(session['user_id'])})
@@ -398,11 +395,15 @@ def tambah_data_lapangan():
 def edit_data_lapangan(_id):
     if request.method == 'POST':
         jenis_lapangan = request.form['jenis_lapangan']
-        harga_lapangan = request.form['harga_lapangan']
+        harga_lapangan = int(request.form['harga_lapangan'])
         nama_lapangan = request.form['nama_lapangan']
         foto_lapangan = request.files['foto_lapangan']
         deskripsi_lapangan = request.form['deskripsi_lapangan']
         
+        if harga_lapangan > 100000:
+            flash("Nominal harga terlalu besar", "danger")
+            return redirect(url_for('edit_data_lapangan', _id=_id))
+
         if foto_lapangan:
             nama_file_asli = foto_lapangan.filename
             nama_file_foto = secure_filename(nama_file_asli)

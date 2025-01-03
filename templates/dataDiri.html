@@ -75,12 +75,12 @@
           <div
             class="grid grid-cols-1 gap-1 p-3 bg-gray-100 sm:grid-cols-3 sm:gap-4"
           >
-            <dt class="font-medium text-gray-900">Photo profile</dt>
+            <dt class="font-medium text-gray-900">Photo Profile</dt>
             <dd class="text-gray-700 sm:col-span-2">
               <label
                 for="photoInput"
                 class="cursor-pointer inline-block bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded"
-                >Add Photo</label
+                >Choose Photo</label
               >
               <input
                 name="foto"
@@ -91,7 +91,7 @@
               />
               <img
                 id="photoPreview"
-                src="{{ url_for('static', filename='img/imgProfile/' + (users.foto)) }}"
+                src="{{ url_for('static', filename='img/imgProfile/' + (users.foto if users and users.foto else '')) }}"
                 alt="Preview"
                 style="display: none; max-width: 100%; height: auto"
                 width="200px"
@@ -130,7 +130,7 @@
           <div
             class="grid grid-cols-1 gap-1 p-3 even:bg-gray-50 sm:grid-cols-3 sm:gap-4"
           >
-            <dt class="font-medium text-gray-900">Phone number</dt>
+            <dt class="font-medium text-gray-900">Phone Number</dt>
             <dd class="text-gray-700 sm:col-span-2">
               <input
                 type="tel"
