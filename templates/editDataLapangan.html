@@ -94,13 +94,16 @@
             class="block text-sm font-medium text-gray-700"
             >Nama Lapangan</label
           >
-          <input
-            type="text"
+          <select
             id="nama-lapangan"
             name="nama_lapangan"
             class="dark:text-gray-800 mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-            value="{{data.nama}}"
-          />
+          >
+            {% for data in datanamalapangan %}
+            <option value="{{data.nama}}">{{data.nama}}</option>
+            {% endfor %}
+            <!-- Add more options for other types of fields if needed -->
+          </select>
         </div>
         <div class="mb-4">
           <label

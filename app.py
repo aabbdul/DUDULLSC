@@ -21,7 +21,6 @@ from reportlab.lib import colors
 app = Flask(__name__)
 app.secret_key = 'sjdcasjbcsabfh'
 
-
 client = MongoClient('mongodb://localhost:27017/')
 db = client['gor_shinta']
 
@@ -34,6 +33,7 @@ dataTentang_collection = db['dataTentang']
 dataReview_collection = db['dataReview']
 dataPembayaran_collection = db['dataPembayaran']
 dataAdmin_collection = db['dataAdmin']
+dataNama_lapangan = db['namaLapangan']
 
 # Inisialisasi Flask-Login
 login_manager = LoginManager()
@@ -354,6 +354,7 @@ def datadiri():
 def admin_data_lapangan():
     if is_valid_admin():
         dataLapangan = list(db.dataLapangan.find({}))
+        
         return render_template('adminDataLapangan.html', dataLapangan=dataLapangan)
     else:
         return redirect(url_for('admin_login'))
@@ -386,9 +387,12 @@ def tambah_data_lapangan():
             'foto': nama_file_foto,
             'deskripsi': deskripsi_lapangan
         })
+
+        dataNama_lapangan.insert_one({
+            'nama': nama_lapangan
+        })
         
         return redirect(url_for("admin_data_lapangan"))
-        
     return render_template('tambahDataLapangan.html')
 
 @app.route('/editDataLapangan/<string:_id>', methods=["GET", "POST"])
@@ -400,10 +404,18 @@ def edit_data_lapangan(_id):
         foto_lapangan = request.files['foto_lapangan']
         deskripsi_lapangan = request.form['deskripsi_lapangan']
         
-        if harga_lapangan > 100000:
-            flash("Nominal harga terlalu besar", "danger")
+        if harga_lapangan > 200000:
+            flash("Nominal harga terlalu tinggi", "danger")
             return redirect(url_for('edit_data_lapangan', _id=_id))
 
+        existing_lapangan = db.dataLapangan.find_one({
+            'nama': nama_lapangan
+        })
+
+        if existing_lapangan is not None:
+            flash("Nama lapangan sudah dipakai","danger")
+            return redirect(url_for('edit_data_lapangan', _id=_id))
+        
         if foto_lapangan:
             nama_file_asli = foto_lapangan.filename
             nama_file_foto = secure_filename(nama_file_asli)
@@ -428,7 +440,9 @@ def edit_data_lapangan(_id):
         return redirect(url_for('admin_data_lapangan'))
     
     data = db.dataLapangan.find_one({'_id': ObjectId(_id)})
-    return render_template('editDataLapangan.html', data=data)
+    datanamalapangan = list(db.namaLapangan.find({}))
+
+    return render_template('editDataLapangan.html', data=data,datanamalapangan=datanamalapangan)
 
 @app.route('/hapusDataLapangan/<string:_id>', methods=["GET", "POST"])
 def delete_data_lapangan(_id):
@@ -935,7 +949,7 @@ def admin_login():
             session['admin_id'] = str(user['_id'])
             return redirect(url_for('admin_data_akun'))
         else:
-            flash('Username atau password salah. Silakan coba lagi.', 'admin_login')
+            flash('Username atau password salah. Silakan coba lagi.', 'danger')
             return redirect(url_for('admin_login'))
     
     return render_template('adminLogin.html')
