@@ -367,7 +367,7 @@ def tambah_data_lapangan():
     
     if request.method == 'POST':
         jenis_lapangan = request.form['jenis_lapangan']
-        harga_lapangan = request.form['harga_lapangan']
+        harga_lapangan = int(request.form['harga_lapangan'])
         nama_lapangan = request.form['nama_lapangan']
         foto_lapangan = request.files['foto_lapangan']
         deskripsi_lapangan = request.form['deskripsi_lapangan']
@@ -379,7 +379,11 @@ def tambah_data_lapangan():
             foto_lapangan.save(file_path)
         else:
             nama_file_foto = None
-            
+        
+        if harga_lapangan > 200000:
+            flash("Nominal harga terlalu tinggi", "danger")
+            return redirect(url_for('tambah_data_lapangan'))
+
         dataLapangan_collection.insert_one({
             'jenis': jenis_lapangan,
             'harga': harga_lapangan,
@@ -412,8 +416,8 @@ def edit_data_lapangan(_id):
             'nama': nama_lapangan
         })
 
-        if existing_lapangan is not None:
-            flash("Nama lapangan sudah dipakai","danger")
+        if existing_lapangan is not None and str(existing_lapangan['_id']) != _id:
+            flash("Nama lapangan sudah dipakai", "danger")
             return redirect(url_for('edit_data_lapangan', _id=_id))
         
         if foto_lapangan:
@@ -440,8 +444,8 @@ def edit_data_lapangan(_id):
         return redirect(url_for('admin_data_lapangan'))
     
     data = db.dataLapangan.find_one({'_id': ObjectId(_id)})
-    datanamalapangan = list(db.namaLapangan.find({}))
-
+    datanamalapangan = list(db.namaLapangan.find({}).sort([('nama', 1)]))
+    
     return render_template('editDataLapangan.html', data=data,datanamalapangan=datanamalapangan)
 
 @app.route('/hapusDataLapangan/<string:_id>', methods=["GET", "POST"])
